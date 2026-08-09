@@ -93,6 +93,26 @@ void print_num(int num, unsigned char color, int x, int y) {
     }
 }
 
-//© جميع الحقوق المحفوضه لعام 2026 Oshwad_dev ©️©️©️
+//الكرسر
+
+void outb(unsigned short port, unsigned char data) {
+    __asm__ __volatile__ ("outb %1, %0" : : "dN" (port), "a" (data));
+}
+
+//يكمل
+
+void move_cursor(int x, int y) {
+    // حساب رقم الخانة الكلي (من 0 لـ 1999)
+    unsigned short pos = (y * 80) + x;
+
+    // أ) إرسال النص العالي (High Byte) عبر القناة 0x0E
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (unsigned char)((pos >> 8) & 0xFF));
+
+    // ب) إرسال النص الواطي (Low Byte) عبر القناة 0x0F
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (unsigned char)(pos & 0xFF));
+}
+//© جميع الحقوق المحفوضه لعام 2026 Nexus_dev ©️©️©️
 
 #endif
